@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { getToken } from "@/lib/auth-server"
 import { ConvexClientProvider } from "@/components/ConvexClientProvider"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { Toaster } from "sonner"
 
 const interHeading = Inter({ subsets: ["latin"], variable: "--font-heading" })
 
@@ -38,6 +39,7 @@ export default async function RootLayout({
       <body>
         <ThemeProvider>
           <ConvexClientProvider initialToken={token}>
+            <Toaster />
             <TooltipProvider>{children}</TooltipProvider>
           </ConvexClientProvider>
         </ThemeProvider>
