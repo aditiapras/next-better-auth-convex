@@ -4,30 +4,45 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { authClient } from "@/lib/auth-client"
 import { LogOutIcon } from "lucide-react"
 
 export function UserButton() {
-  const { data: session } = authClient.useSession()
+  const { data: session, isPending } = authClient.useSession()
 
-  if (!session) return null
+  if (!session) return <p className="text-xs text-muted-foreground">Loading...</p>
 
   const user = session.user
 
   return (
     <DropdownMenu>
+      {isPending && (
+        <p className="text-sm text-muted-foreground">Loading...</p>
+      )}
       <DropdownMenuTrigger asChild>
-        <Avatar className="size-10">
+        <Avatar className="size-7 cursor-pointer">
           <AvatarImage src={user.image ?? undefined} alt={user.name ?? "User"} />
-          <AvatarFallback>{user.name?.charAt(0).toUpperCase() ?? "U"}</AvatarFallback>
+          <AvatarFallback className="bg-orange-500 text-white">{user.name?.charAt(0).toUpperCase() ?? "U"}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>
+            <div className="flex flex-col">
+              <span>{user.name}</span>
+              <span className="text-xs text-muted-foreground">{user.email}</span>
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator/>
         <DropdownMenuItem
-          onClick={() => authClient.signOut()}
+          onClick={async () => await authClient.signOut()}
           className="cursor-pointer"
         >
           <LogOutIcon data-icon="inline-start" />

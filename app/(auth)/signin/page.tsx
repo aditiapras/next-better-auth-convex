@@ -19,6 +19,8 @@ import {
   InputGroupAddon,
   InputGroupButton,
 } from "@/components/ui/input-group"
+import { authClient } from "@/lib/auth-client"
+import { toast } from "sonner"
 
 const signinSchema = z.object({
   username: z
@@ -44,7 +46,18 @@ export default function SigninPage() {
 
   const onSubmit = async (data: SigninFormValues) => {
     console.log("Form submitted:", data)
-    // Add your signin logic here
+    await authClient.signIn.username({
+      username: data.username,
+      password: data.password,
+      callbackURL: "/better",
+    },{
+      onSuccess: () => {
+        toast("Redirecting...")
+      },
+      onError: (error) => {
+        toast(error.error.message)
+      }
+    })
   }
 
   return (

@@ -10,7 +10,7 @@ import { Toaster } from "sonner"
 
 const interHeading = Inter({ subsets: ["latin"], variable: "--font-heading" })
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -32,14 +32,21 @@ export default async function RootLayout({
         "antialiased",
         fontMono.variable,
         "font-sans",
-        geist.variable,
+        inter.variable,
         interHeading.variable
       )}
     >
       <body>
         <ThemeProvider>
           <ConvexClientProvider initialToken={token}>
-            <Toaster />
+            <Toaster
+              toastOptions={{
+                style: {
+                  fontFamily: "var(--font-sans)",
+                },
+              }}
+              closeButton
+            />
             <TooltipProvider>{children}</TooltipProvider>
           </ConvexClientProvider>
         </ThemeProvider>
