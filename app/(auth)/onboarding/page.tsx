@@ -40,7 +40,7 @@ type OnboardingFormValues = z.infer<typeof onboardingSchema>
 export default function OnboardingPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-const router = useRouter()
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -51,31 +51,36 @@ const router = useRouter()
 
   const onSubmit = async (data: OnboardingFormValues) => {
     console.log("Form submitted:", data)
-    await authClient.changePassword({
-      currentPassword: "H@nta1ip",
-      newPassword: data.password,
-      revokeOtherSessions: true,
-    },{
-      onSuccess: () => {
-        toast("Password changed successfully")
+    await authClient.changePassword(
+      {
+        currentPassword: "H@nta1ip",
+        newPassword: data.password,
+        revokeOtherSessions: true,
       },
-      onError: (error) => {
-        toast(error.error.message)
+      {
+        onSuccess: () => {
+          toast("Password changed successfully")
+        },
+        onError: (error) => {
+          toast(error.error.message)
+        },
       }
-    } )
-    await authClient.updateUser({
-      mustChangePassword: false
-    } as any,
-  {
-      onSuccess: () => {
-        // Redirect to dashboard or home
-        toast("Onboarding completed successfully, redirecting...")
-        router.push("/")
-      },
-      onError: (error) => {
-        toast(error.error.message)
+    )
+    await authClient.updateUser(
+      {
+        mustChangePassword: false,
+      } as any,
+      {
+        onSuccess: () => {
+          // Redirect to dashboard or home
+          toast("Onboarding completed successfully, redirecting...")
+          router.push("/")
+        },
+        onError: (error) => {
+          toast(error.error.message)
+        },
       }
-    })
+    )
     // Add your onboarding logic here
     // This should update the user's password and set mustChangePassword to false
   }
@@ -86,7 +91,8 @@ const router = useRouter()
         <div>
           <h1 className="font-semibold">Onboarding</h1>
           <p className="text-sm text-muted-foreground">
-            Before we continue, please set a new password to secure your account.
+            Before we continue, please set a new password to secure your
+            account.
           </p>
         </div>
 
@@ -108,7 +114,10 @@ const router = useRouter()
                     variant="ghost"
                     size="icon-sm"
                     onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                    disabled={isSubmitting}
                   >
                     {showPassword ? (
                       <EyeOffIcon data-icon="inline-start" />
@@ -144,6 +153,7 @@ const router = useRouter()
                     aria-label={
                       showConfirmPassword ? "Hide password" : "Show password"
                     }
+                    disabled={isSubmitting}
                   >
                     {showConfirmPassword ? (
                       <EyeOffIcon data-icon="inline-start" />

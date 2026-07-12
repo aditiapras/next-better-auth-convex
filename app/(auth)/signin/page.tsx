@@ -46,18 +46,21 @@ export default function SigninPage() {
 
   const onSubmit = async (data: SigninFormValues) => {
     console.log("Form submitted:", data)
-    await authClient.signIn.username({
-      username: data.username,
-      password: data.password,
-      callbackURL: "/better",
-    },{
-      onSuccess: () => {
-        toast("Redirecting...")
+    await authClient.signIn.username(
+      {
+        username: data.username,
+        password: data.password,
+        callbackURL: "/better",
       },
-      onError: (error) => {
-        toast(error.error.message)
+      {
+        onSuccess: () => {
+          toast("Redirecting...")
+        },
+        onError: (error) => {
+          toast(error.error.message)
+        },
       }
-    })
+    )
   }
 
   return (
@@ -83,6 +86,7 @@ export default function SigninPage() {
                   maxLength={8}
                   aria-invalid={!!errors.username}
                   {...register("username")}
+                  disabled={isSubmitting}
                 />
               </InputGroup>
               {errors.username && (
@@ -99,6 +103,7 @@ export default function SigninPage() {
                   placeholder="Enter your password"
                   aria-invalid={!!errors.password}
                   {...register("password")}
+                  disabled={isSubmitting}
                 />
                 <InputGroupAddon align="inline-end">
                   <InputGroupButton
@@ -106,7 +111,9 @@ export default function SigninPage() {
                     variant="ghost"
                     size="icon-sm"
                     onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOffIcon data-icon="inline-start" />

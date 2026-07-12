@@ -60,20 +60,23 @@ export default function SignupPage() {
 
   const onSubmit = async (data: SignupFormValues) => {
     console.log("Form submitted:", data)
-    await authClient.signUp.email({
-      email: data.email,
-      password: data.password,
-      name: data.name,
-      username: data.username,
-    }, {
-      onSuccess: () => {
-        toast("Account created successfully")
-        reset()
+    await authClient.signUp.email(
+      {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        username: data.username,
       },
-      onError: (error) => {
-        toast(error.error.message)
+      {
+        onSuccess: () => {
+          toast("Account created successfully")
+          reset()
+        },
+        onError: (error) => {
+          toast(error.error.message)
+        },
       }
-    })
+    )
   }
 
   return (
@@ -97,6 +100,7 @@ export default function SignupPage() {
                   placeholder="Enter your name"
                   aria-invalid={!!errors.name}
                   {...register("name")}
+                  disabled={isSubmitting}
                 />
               </InputGroup>
               {errors.name && <FieldError>{errors.name.message}</FieldError>}
@@ -111,6 +115,7 @@ export default function SignupPage() {
                   placeholder="Enter your email"
                   aria-invalid={!!errors.email}
                   {...register("email")}
+                  disabled={isSubmitting}
                 />
               </InputGroup>
               {errors.email && <FieldError>{errors.email.message}</FieldError>}
@@ -127,6 +132,7 @@ export default function SignupPage() {
                   maxLength={8}
                   aria-invalid={!!errors.username}
                   {...register("username")}
+                  disabled={isSubmitting}
                 />
               </InputGroup>
               {errors.username && (
@@ -146,6 +152,7 @@ export default function SignupPage() {
                   placeholder="Enter your password"
                   aria-invalid={!!errors.password}
                   {...register("password")}
+                  disabled={isSubmitting}
                 />
                 <InputGroupAddon align="inline-end">
                   <InputGroupButton
@@ -153,7 +160,9 @@ export default function SignupPage() {
                     variant="ghost"
                     size="icon-sm"
                     onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOffIcon data-icon="inline-start" />
@@ -169,7 +178,9 @@ export default function SignupPage() {
             </Field>
 
             <Field data-invalid={!!errors.confirmPassword}>
-              <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
+              <FieldLabel htmlFor="confirmPassword">
+                Confirm Password
+              </FieldLabel>
               <InputGroup>
                 <InputGroupInput
                   id="confirmPassword"
@@ -187,6 +198,7 @@ export default function SignupPage() {
                     aria-label={
                       showConfirmPassword ? "Hide password" : "Show password"
                     }
+                    disabled={isSubmitting}
                   >
                     {showConfirmPassword ? (
                       <EyeOffIcon data-icon="inline-start" />
